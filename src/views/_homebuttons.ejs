@@ -1,0 +1,11 @@
+<div class="bg-theme bd-theme h-100 mb-5 typicalbox">
+    <a href="/" class="btn btn-adminchange w-100 mt-5 text-start aligncentermobile"><i class="fa-solid fa-house"></i> Information</a>
+    <a href="/create" class="btn btn-adminchange w-100 text-start aligncentermobile"><i class="fa-solid fa-ticket"></i> Submit A Request</a>
+    <a href="/tickets" class="btn btn-adminchange w-100 text-start aligncentermobile"><i class="fa-solid fa-eye"></i> View Requests</a>
+    <% if(isStaff) { %>
+        <a href="/admin" class="btn btn-adminchange w-100 text-start aligncentermobile"><i class="fa-solid fa-shield-halved"></i> Admin Panel</a>
+    <% }; %>
+    <hr>
+    <a href="/account" class="btn btn-adminchange w-100 text-start aligncentermobile"><i class="fa-solid fa-user-shield"></i> My Account</a>
+    <p class="mt-4 bigfont text-center text-white"> Designed by <a href="https://github.com/itz-hyperz" class="text-primary" target="_blank">ThatGuyHyperz</a></p>
+</div>

@@ -1,0 +1,231 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Admin - <%= sitesettings.sitename %></title>
+        <meta property="og:title" content="Admin - <%= sitesettings.sitename %>" />
+        <link rel="icon" href="/assets/logo.png">
+        <meta property="og:image" content="/assets/logo.png">
+        <meta name="theme-color" content="<%= sitesettings.sitecolor %>">
+        <meta name="description" content="<%= sitesettings.sitedesc %>" />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content="<%= sitesettings.sitedesc %>" />
+        <meta name="keywords" content="<%= config.seoKeywords %>" />
+    </head>
+    <body>
+        <%- include('_header') %>
+        <div class="row h-100 justify-content-center">
+            <div class="col-lg-2 text-center">
+                <div class="adminareacol">
+                    <%- include('_homebuttons') %>
+                </div>
+            </div>
+            <div class="col-lg-10 mt-5 mb-3 p-3 text-start">
+                <div class="adminareacol">
+                    <h1><i class="fa-solid fa-shield-halved"></i> Admin Panel</h1>
+                    <hr>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-lg-2 mb-3">
+                            <button type="button" id="settingsButton" onclick="switcheroo('settings')" class="btn btn-theme w-100"><i class="fa-solid fa-gear"></i> Settings Management</button>
+                        </div>
+                        <div class="col-lg-2 mb-3">
+                            <button type="button" id="usersButton" onclick="switcheroo('users')" class="btn btn-theme w-100"><i class="fa-solid fa-users"></i> User Management</button>
+                        </div>
+                        <div class="col-lg-2 mb-3">
+                            <button type="button" id="categoryButton" onclick="switcheroo('category')" class="btn btn-theme w-100"><i class="fa-solid fa-server"></i> Category Management</button>
+                        </div>
+                        <div class="col-lg-2 mb-3">
+                            <button type="button" id="ticketsButton" onclick="switcheroo('tickets')" class="btn btn-theme w-100"><i class="fa-solid fa-ticket"></i> Tickets Management</button>
+                        </div>
+                        <div class="col-lg-2 mb-3">
+                            <button type="button" id="staffButton" onclick="switcheroo('staff')" class="btn btn-theme w-100"><i class="fa-solid fa-shield-halved"></i> Staff Management</button>
+                        </div>
+                    </div>
+                    <div id="settings" class="container bg-theme p-3 mb-5" style="display: block; border-radius: 0.5em;">
+                        <h2>Site Settings</h2>
+                        <hr>
+                        <form action="/backend/update/settings" method="post" enctype="multipart/form-data">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 mb-3">
+                                    <label for="sitename">Site Name</label>
+                                    <input type="text" name="sitename" placeholder="Site name..." value="<%= sitesettings.sitename %>" class="form-control" required>
+                                </div>
+                                <div class="col-lg-6 mb-3">
+                                    <label for="sitecolor">Site Color</label>
+                                    <input type="text" name="sitecolor" placeholder="Site color..." value="<%= sitesettings.sitecolor %>" class="form-control" required>
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label for="sitedesc">Site Description</label>
+                                    <textarea name="sitedesc" class="form-control" placeholder="Site description..." rows="4" required><%= sitesettings.sitedesc %></textarea>
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label for="sitelogo">Site Logo</label>
+                                    <input type="file" name="sitelogo" accept="image/png" class="form-control">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-themedark w-100"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+                        </form>
+                    </div>
+                    <div id="users" class="container bg-theme p-3 mb-5" style="display: none; border-radius: 0.5em;">
+                        <h2>User Manager</h2>
+                        <hr>
+                        <input type="text" class="form-control mb-3 darkinputcolor text-start searchbox" id="userSearch" onkeyup="searchBar(0, 'userSearch', 'usersTable')" placeholder="Search a User ID...">
+                        <div id="usersTable" class="customDiv2">
+                            <table class="table table-bordered border-white text-white">
+                            <thead>
+                                <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Email</th>
+                                <th scope="col" class="text-end">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% users.forEach(function(item) { %>
+                                <tr>
+                                    <td><%- item.id %></td>
+                                    <td><%- item.username %></td>
+                                    <td><%- item.email %></td>
+                                    <td class="text-end"><a href="/backend/delete/user/<%= item.id %>" class="btn btn-danger btn-sm">Delete</a></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="category" class="container bg-theme p-3 mb-5" style="display: none; border-radius: 0.5em;">
+                        <h2>Category Manager</h2>
+                        <hr>
+                        <form action="/backend/create/category" method="post" enctype="multipart/form-data">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-4">
+                                    <input type="text" name="name" placeholder="Category name..." class="form-control" required>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="file" accept="image/png" name="catimg" class="form-control" required>
+                                </div>
+                                <div class="col-lg-4">
+                                    <button type="submit" class="btn btn-themedark w-100"><i class="fa-solid fa-circle-plus"></i> Create Category</button>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <div id="categoryTable" class="customDiv2">
+                            <table class="table table-bordered border-white text-white">
+                            <thead>
+                                <tr>
+                                <th scope="col">Unique ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col" class="text-end">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% categories.forEach(function(item) { %>
+                                <tr>
+                                    <td><%- item.id %></td>
+                                    <td><%- item.name %></td>
+                                    <td class="text-end"><a href="/backend/delete/category/<%= item.id %>" class="btn btn-danger btn-sm">Delete</a></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="tickets" class="container bg-theme p-3 mb-5" style="display: none; border-radius: 0.5em;">
+                        <h2>Ticket Manager</h2>
+                        <hr>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 mb-3">
+                                <input type="text" class="form-control mb-3 darkinputcolor text-start searchbox" id="ticketSearch" onkeyup="searchBar(1, 'ticketSearch', 'ticketTable')" placeholder="Search a Username...">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <input type="text" class="form-control mb-3 darkinputcolor text-start searchbox" id="ticketSearch2" onkeyup="searchBar(2, 'ticketSearch2', 'ticketTable')" placeholder="Search a Ticket Title...">
+                            </div>
+                        </div>
+                        <div id="ticketTable" class="customDiv2">
+                            <table class="table table-bordered border-white text-white">
+                            <thead>
+                                <tr>
+                                <th scope="col">Unique ID</th>
+                                <th scope="col">User ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Date Created</th>
+                                <th scope="col">Answered</th>
+                                <th scope="col" class="text-end">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% tickets.sort((a, b) => { return (isNaN(b.answerid) - isNaN(a.answerid)) }).forEach(function(item) { %>
+                                <tr>
+                                    <td><%- item.id %></td>
+                                    <td><%- item.username %></td>
+                                    <td><%- item.title %></td>
+                                    <td><%- item.category %></td>
+                                    <td><%- item.datecreated %></td>
+                                    <% if(item.answerid == 'na') { %>
+                                        <td><span class="text-danger">Unanswered</span></td>
+                                    <% } else { %>
+                                        <td><span class="text-success">Answered</span></td>
+                                    <% }; %>
+                                    <td class="text-end"><a href="/ticket/<%= item.id %>" class="btn btn-theme btn-sm">View Ticket</a> <a href="/backend/delete/ticket/<%= item.id %>" class="btn btn-danger btn-sm">Delete</a></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="staff" class="container bg-theme p-3 mb-5" style="display: none; border-radius: 0.5em;">
+                        <h2>Staff Manager</h2>
+                        <hr>
+                        <form action="/backend/create/staff" method="post">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 mb-3">
+                                    <input type="text" name="userid" placeholder="Staff User ID..." class="form-control" required>
+                                </div>
+                                <div class="col-lg-6 mb-3">
+                                    <button type="submit" class="btn btn-themedark w-100"><i class="fa-solid fa-circle-plus"></i> Create Staff</button>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <div id="staffTable" class="customDiv2">
+                            <table class="table table-bordered border-white text-white">
+                            <thead>
+                                <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col" class="text-end">Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% staff.forEach(function(item) { %>
+                                <tr>
+                                    <td><%- item.userid %></td>
+                                    <td class="text-end"><a href="/backend/delete/staff/<%= item.userid %>" class="btn btn-danger btn-sm">Delete</a></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('_footer') %>
+        <script>
+            var settings = document.getElementById('settings');
+            var users = document.getElementById('users');
+            var category = document.getElementById('category');
+            var tickets = document.getElementById('tickets');
+            var staff = document.getElementById('staff');
+            function switcheroo(content) {
+                settings.style.display = 'none';
+                users.style.display = 'none';
+                category.style.display = 'none';
+                tickets.style.display = 'none';
+                staff.style.display = 'none';
+                document.getElementById(content).style.display = 'block';
+            };
+        </script>
+    </body>
+</html>
